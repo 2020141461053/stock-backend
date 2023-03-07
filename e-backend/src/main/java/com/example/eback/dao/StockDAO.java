@@ -9,7 +9,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface StockDAO extends JpaRepository<Stock,Integer> {
-    Stock findByName(String name);
+
+    List<Stock> findByNameLike(String name);
+
+    List<Stock> findByIdLike(String id);
     Page<Stock> findAllBy(Pageable page);
     Stock findById(String id);
     boolean existsById(String sid);

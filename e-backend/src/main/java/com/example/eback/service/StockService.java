@@ -4,6 +4,7 @@ import com.example.eback.dao.StockDAO;
 import com.example.eback.entity.Stock;
 import com.example.eback.util.MyPage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,13 @@ public class StockService {
         return  stockDAO.findById(sid);
     }
 
+    public List<Stock> findByNameLike(String sname){
+        return stockDAO.findByNameLike(sname);
+    }
+
+    public List<Stock> findByIdLike(String id){
+        return stockDAO.findByIdLike(id);
+    }
     public void saveStocks(List<Stock> stocks){
         stockDAO.saveAll(stocks);
     }

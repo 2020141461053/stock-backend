@@ -43,12 +43,10 @@ public class LoginController {
 
         Subject subject = SecurityUtils.getSubject();
 
-//        subject.getSession().setTimeout(10000);
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(username, requestUser.getPassword());
         usernamePasswordToken.setRememberMe(true);
         try {
             subject.login(usernamePasswordToken);
-            User user = userService.findByUsername(username);
             LogUtil.log(ClassName,"info",username+"登录成功");
             return ResultFactory.buildSuccessResult(username);
         } catch (IncorrectCredentialsException e) {
@@ -71,8 +69,9 @@ public class LoginController {
                 return ResultFactory.buildSuccessResult("注册成功");
             case 2:
                 return ResultFactory.buildFailResult("用户已存在");
+            default:
+                return ResultFactory.buildFailResult("未知错误");
         }
-        return ResultFactory.buildFailResult("未知错误");
     }
 
     @GetMapping("/api/logout")

@@ -14,7 +14,7 @@ class EBackApplicationTests {
     private  StockDataPublisher stockDataPublisher;
 
     @Test
-    public void test(){
+    void test(){
         //System.out.println("ddd");
         //stockDataPublisher.publishStockDataEvent();
 

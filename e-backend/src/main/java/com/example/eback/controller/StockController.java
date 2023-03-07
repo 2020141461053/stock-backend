@@ -9,6 +9,7 @@ import com.example.eback.result.ResultFactory;
 import com.example.eback.service.StockDataService;
 import com.example.eback.service.StockService;
 import com.example.eback.service.UserService;
+import com.example.eback.util.DateConvertUtil;
 import com.example.eback.util.MyPage;
 import com.opencsv.CSVReader;
 import com.opencsv.bean.CsvToBean;
@@ -16,6 +17,7 @@ import com.opencsv.bean.CsvToBeanBuilder;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -73,30 +75,23 @@ public class StockController {
         return ResultFactory.buildSuccessResult(stockMypage);
     }
 
+    @ApiOperation(value = "根据股票代码查询",notes = "需要股票代码")
+    @PostMapping("/api/stock/get_code")
+    public List<Stock> getByCode(@RequestParam("stockCode") String scode){
+        List<Stock> stocks = stockService.findByIdLike("%"+scode+"%");
+        return stocks;
+    }
+
+    @ApiOperation(value = "根据股票名称查询",notes = "需要股票名称")
+    @PostMapping("/api/stock/get_name")
+    public List<Stock> getByName(@RequestParam("stockName") String sname) {
+        List<Stock> stocks = stockService.findByNameLike("%"+sname+"%");
+        return stocks;
+    }
+
     @ApiOperation(value = "上传新的股票",notes = "")
     @PostMapping("/api/stock/upload")
     public String uploadCsv(@RequestParam("file") MultipartFile file, Model model) throws IOException {
-//        String pythonScriptPath = "D:\\workforce\\teffy-backend\\stock.py";
-//
-//        String[] cmd = {"python", pythonScriptPath, String.valueOf(file)};
-//
-//        ProcessBuilder pb = new ProcessBuilder(cmd);
-//        Map<String, String> env = processBuilder.environment();
-//        env.put("PYTHONPATH", "/path/to/module");
-//        pb.redirectErrorStream(true);
-//        Process process = pb.start();
-//
-//        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-//        String line;
-//        while ((line = reader.readLine()) != null) {
-//            System.out.println(line);
-//        }
-//
-//        try {
-//            process.waitFor();
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
         if (file.isEmpty()) {
             model.addAttribute("message", "Please select a CSV file to upload.");
             model.addAttribute("status", false);
@@ -105,11 +100,13 @@ public class StockController {
             try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
 
                 CSVReader csvReader = new CSVReader(reader);
-//                System.out.print(((BufferedReader) reader).lines());
                 // create csv bean reader
-                CsvToBean<Stock> csvToBean = new CsvToBeanBuilder(csvReader)
+                CsvToBean<Stock> csvToBean = new CsvToBeanBuilder<Stock>(csvReader)
                         .withType(Stock.class)
+                        .withSeparator(',')
+                        .withQuoteChar('"')
                         .withIgnoreLeadingWhiteSpace(true)
+                        .withConverter(new DateConvertUtil())
                         .build();
 
                 // convert `CsvToBean` object to list of stocks

@@ -14,9 +14,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class FavoriteService {
+    private  final  static Logger logger = LoggerFactory.getLogger(UserService. class);
     @Autowired
     UserDAO userDAO;
 
@@ -34,12 +37,12 @@ public class FavoriteService {
      * @return
      */
     public MyPage<Stock> findAll(int uid, int page, int size){
-        MyPage<Stock> stocks=new MyPage<>();;
+        MyPage<Stock> stocks=new MyPage<>();
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
         Page<User_Stock> user_stocks=favoriteDAO.findAllByUid(uid, PageRequest.of(page, size, sort));
         List<Stock> stockList =new ArrayList<>();
         for (User_Stock u_s : user_stocks.getContent()){
-            System.out.println(u_s.getSid());
+            logger.info(u_s.getSid());
             stockList.add(stockDAO.findById(u_s.getSid()));
         }
         stocks.setContent(stockList);
@@ -66,7 +69,7 @@ public class FavoriteService {
         }
         user_stock.setSid(sid);
         user_stock.setUid(uid);
-        System.out.println(user_stock);
+        logger.info("user_stock",user_stock);
         favoriteDAO.save(user_stock);
         return  1;
     }
