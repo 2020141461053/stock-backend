@@ -3,6 +3,7 @@ package com.example.eback.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.opencsv.bean.CsvBindByName;
+import com.opencsv.bean.CsvDate;
 import lombok.*;
 
 import javax.persistence.*;
@@ -20,7 +21,7 @@ import java.util.Date;
 public class Stock {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "stock_code")
     @CsvBindByName
     private String id;
@@ -29,6 +30,7 @@ public class Stock {
     private String name;
 
     @CsvBindByName
+    @CsvDate("dd.MM.yyyy")
     private Date create_date;
 
     @CsvBindByName

@@ -9,7 +9,6 @@ import com.example.eback.result.ResultFactory;
 import com.example.eback.service.StockDataService;
 import com.example.eback.service.StockService;
 import com.example.eback.service.UserService;
-import com.example.eback.util.DateConvertUtil;
 import com.example.eback.util.MyPage;
 import com.opencsv.CSVReader;
 import com.opencsv.bean.CsvToBean;
@@ -91,7 +90,7 @@ public class StockController {
 
     @ApiOperation(value = "上传新的股票",notes = "")
     @PostMapping("/api/stock/upload")
-    public String uploadCsv(@RequestParam("file") MultipartFile file, Model model) throws IOException {
+    public Result uploadCsv(@RequestParam("file") MultipartFile file, Model model) throws IOException {
         if (file.isEmpty()) {
             model.addAttribute("message", "Please select a CSV file to upload.");
             model.addAttribute("status", false);
@@ -106,7 +105,6 @@ public class StockController {
                         .withSeparator(',')
                         .withQuoteChar('"')
                         .withIgnoreLeadingWhiteSpace(true)
-                        .withConverter(new DateConvertUtil())
                         .build();
 
                 // convert `CsvToBean` object to list of stocks
@@ -130,7 +128,7 @@ public class StockController {
                 model.addAttribute("status", false);
             }
         }
-        return "file-upload-status";
+        return ResultFactory.buildFailResult("上传成功");
     }
 
     public User getUser (){
