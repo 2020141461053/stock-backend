@@ -23,6 +23,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletResponse;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @ApiOperation(value = "股票数据相关接口")
@@ -47,7 +49,7 @@ public class StockDataController {
         return ResultFactory.buildSuccessResult(stockDatas);
     }
 
-    @ApiOperation(value = "导出某只股票的全部相关数据",notes = "需要该股票的int sid")
+    @ApiOperation(value = "导出某只股票的全部相关数据",notes = "需要该股票的String sid")
     @GetMapping("/api/stock_data/export")
     public void exportCSV(HttpServletResponse response, @RequestBody StockData stockData)throws Exception{
         String filename = stockData.getSid() + ".csv";
@@ -119,4 +121,6 @@ public class StockDataController {
 
         return ResultFactory.buildSuccessResult("成功");
     }
+
+
 }

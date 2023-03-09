@@ -14,6 +14,7 @@ public interface StockDAO extends JpaRepository<Stock,Integer> {
 
     List<Stock> findByIdLike(String id);
     Page<Stock> findAllBy(Pageable page);
+    List<Stock> findAll();
     Stock findById(String id);
     boolean existsById(String sid);
 }
