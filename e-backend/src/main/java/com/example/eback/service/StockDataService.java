@@ -21,4 +21,8 @@ public class StockDataService {
         stockDataDAO.save(stockData);
     }
 
+    public void saveDataList(List<StockData> stockDataList){
+        stockDataDAO.saveAll(stockDataList);
+    }
+
 }

@@ -9,20 +9,25 @@ import com.example.eback.result.Result;
 import com.example.eback.result.ResultFactory;
 import com.example.eback.service.StockDataService;
 import com.example.eback.service.StockService;
+import com.opencsv.CSVReader;
+import com.opencsv.bean.*;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import com.example.eback.WebSocket.WebSocket;
 import com.opencsv.CSVWriter;
-import com.opencsv.bean.ColumnPositionMappingStrategy;
-import com.opencsv.bean.StatefulBeanToCsv;
-import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.List;
 
 @ApiOperation(value = "股票数据相关接口")
@@ -69,6 +74,41 @@ public class StockDataController {
         writer.write(stockDatas);
 
     }
+
+
+    @ApiOperation(value = "上传股票历史详情信息",notes = "")
+    @PostMapping("/api/stock_data/upload")
+    public Result uploadCsv(@RequestParam("file") MultipartFile file, Model model) throws IOException {
+        if (file.isEmpty()) {
+            model.addAttribute("message", "Please select a CSV file to upload.");
+            model.addAttribute("status", false);
+        }else {
+            // parse CSV file to create a list of `User` objects
+            try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+
+                CSVReader csvReader = new CSVReader(reader);
+                // create csv bean reader
+                CsvToBean<StockData> csvToBean = new CsvToBeanBuilder<StockData>(csvReader)
+                        .withType(StockData.class)
+                        .withSeparator(',')
+                        .withQuoteChar('"')
+                        .withIgnoreLeadingWhiteSpace(true)
+                        .build();
+
+                // convert `CsvToBean` object to list of stocks
+                List<StockData> stockDataList = csvToBean.parse();
+                System.out.print(stockDataList);
+                stockDataService.saveDataList(stockDataList);
+                // TODO: save stocks in DB?
+
+            } catch (Exception ex) {
+                model.addAttribute("message", "An error occurred while processing the CSV file.");
+                model.addAttribute("status", false);
+            }
+        }
+        return ResultFactory.buildFailResult("上传成功");
+    }
+
 
 
     @ApiOperation(value = "更新某只股票的信息",notes = "全部填写")

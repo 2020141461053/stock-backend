@@ -88,7 +88,7 @@ public class StockController {
         return stocks;
     }
 
-    @ApiOperation(value = "上传新的股票",notes = "")
+    @ApiOperation(value = "批量上传新的股票",notes = "")
     @PostMapping("/api/stock/upload")
     public Result uploadCsv(@RequestParam("file") MultipartFile file, Model model) throws IOException {
         if (file.isEmpty()) {
@@ -114,14 +114,6 @@ public class StockController {
                 // TODO: save stocks in DB?
 
                 stockService.saveStocks(stocks);
-//                if(flag){
-//                    return "successfully upload!";
-//                }else {
-//                    return "upload failed!";
-//                }
-                // save users list on model
-//                model.addAttribute("stocks", stocks);
-//                model.addAttribute("status", true);
 
             } catch (Exception ex) {
                 model.addAttribute("message", "An error occurred while processing the CSV file.");

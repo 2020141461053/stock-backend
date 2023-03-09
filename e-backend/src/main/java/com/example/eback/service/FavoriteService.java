@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 
 @Service
 public class FavoriteService {
-    private  final  static Logger logger = LoggerFactory.getLogger(UserService. class);
+    private static final Logger logger = LoggerFactory.getLogger(UserService. class);
     @Autowired
     UserDAO userDAO;
 
