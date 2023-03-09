@@ -30,7 +30,7 @@ public class URLPathMatchingFilter extends PathMatchingFilter {
 
 
     @Override
-    protected boolean onPreHandle(ServletRequest request, ServletResponse response, Object mappedValue) throws UnauthorizedException, LoginException {
+    protected boolean onPreHandle(ServletRequest request, ServletResponse response, Object mappedValue) throws  LoginException {
 
 
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
@@ -39,7 +39,6 @@ public class URLPathMatchingFilter extends PathMatchingFilter {
         httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
         httpServletResponse.setHeader("Access-Control-Allow-Methods", "*");
         httpServletResponse.setHeader("Access-Control-Max-Age", "3600");
-        //response.setHeader("Access-Control-Allow-Headers", "*");
         httpServletResponse.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Authorization,"
                 + " Content-Type, Accept, Connection, User-Agent, Cookie,token");
 
@@ -72,9 +71,9 @@ public class URLPathMatchingFilter extends PathMatchingFilter {
             boolean hasPermission = false;
             String username = subject.getPrincipal().toString();
 
-            if (requestAPI.startsWith("/api/admin")) {
+            /*if (requestAPI.startsWith("/api/admin")) {
                 hasPermission = true;
-            }
+            }*/
             /**
              *
              * if判断  ：或者role为admin

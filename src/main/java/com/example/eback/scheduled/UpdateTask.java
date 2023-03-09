@@ -24,7 +24,7 @@ public class UpdateTask {
         Date date=new Date();
         for(Stock stock:stockList){
             String sid=stock.getId();
-            stockDataService.StoreT1Data(sid,date,7);
+            stockDataService.StoreTnData(sid,date,7);
         }
     }
 }

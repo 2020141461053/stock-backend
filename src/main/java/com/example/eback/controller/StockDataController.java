@@ -17,6 +17,7 @@ import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import io.swagger.annotations.ApiOperation;
 import lombok.val;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.ui.Model;
@@ -77,7 +78,7 @@ public class StockDataController {
 
     }
 
-
+    @RequiresPermissions("admin")
     @ApiOperation(value = "上传股票历史详情信息", notes = "")
     @PostMapping("/api/stock_data/upload")
     public Result uploadCsv(@RequestParam("file") MultipartFile file, Model model) throws IOException {
@@ -112,6 +113,7 @@ public class StockDataController {
     }
 
 
+    @RequiresPermissions("admin")
     @ApiOperation(value = "更新某只股票的信息", notes = "全部填写")
     @PostMapping("/api/stock_data/add")
     public Result add(@RequestBody StockData stockData) {
@@ -160,6 +162,7 @@ public class StockDataController {
         return ResultFactory.buildSuccessResult("成功");
     }
 
+    @RequiresPermissions("admin")
     @ApiOperation(value = "保存Tn的数据", notes = "全部填写")
     @PostMapping("/api/stock_data_Tn/update")
     public Result StoreTnData(@RequestParam("stock_code") String s_code,
@@ -169,6 +172,8 @@ public class StockDataController {
         return ResultFactory.buildSuccessResult(stockDataService.StoreTnData(s_code,endDay,day_num));
     }
 
+    @ApiOperation(value = "獲得Tn的数据", notes = "全部填写")
+    @PostMapping("/api/stock_data_Tn/get")
     public Result GetTnData(@RequestParam("stock_code") String s_code,
                               @RequestParam("endDay") Date endDay,
                               @RequestParam("startDay") Date  startDay){

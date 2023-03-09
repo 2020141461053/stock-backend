@@ -15,6 +15,7 @@ import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -87,6 +88,7 @@ public class StockController {
         return stocks;
     }
 
+    @RequiresPermissions("admin")
     @ApiOperation(value = "批量上传新的股票", notes = "")
     @PostMapping("/api/stock/upload")
     public Result uploadCsv(@RequestParam("file") MultipartFile file, Model model) throws IOException {
