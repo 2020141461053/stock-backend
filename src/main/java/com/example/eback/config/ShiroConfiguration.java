@@ -25,6 +25,7 @@ import java.util.Map;
  */
 @Configuration
 public class ShiroConfiguration {
+
     @Bean
     public static LifecycleBeanPostProcessor getLifecycleBeanProcessor() {
         return new LifecycleBeanPostProcessor();

@@ -1,10 +1,10 @@
 package com.example.eback.controller;
 
+import com.example.eback.constans.UserRegistryCode;
 import com.example.eback.entity.User;
 import com.example.eback.result.Result;
 import com.example.eback.result.ResultFactory;
 import com.example.eback.service.UserService;
-import com.example.eback.util.LogUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
@@ -35,7 +35,7 @@ public class LoginController {
     @Autowired
     UserService userService;
 
-    @ApiOperation(value = "登录",notes = "账号+密码")
+    @ApiOperation(value = "登录", notes = "账号+密码")
     @PostMapping("/api/login")
     public Result login(@RequestBody @Valid User requestUser) {
 
@@ -62,17 +62,8 @@ public class LoginController {
     @PostMapping("/api/register")
     public Result register(@RequestBody User user) {
         log.info("{}注册", user.getUsername());
-        int status = userService.register(user);
-        switch (status) {
-            case 0:
-                return ResultFactory.buildFailResult("用户名和密码不能为空");
-            case 1:
-                return ResultFactory.buildSuccessResult("注册成功");
-            case 2:
-                return ResultFactory.buildFailResult("用户已存在");
-            default:
-                return ResultFactory.buildFailResult("未知错误");
-        }
+        UserRegistryCode status = userService.register(user);
+        return ResultFactory.buildFailResult(status.getMsg());
     }
 
     @GetMapping("/api/logout")
@@ -84,7 +75,7 @@ public class LoginController {
 
     @GetMapping("/api/admin/authentication")
     public Result authentication() {
-        return  ResultFactory.buildSuccessResult("success");
+        return ResultFactory.buildSuccessResult("success");
     }
 
 }

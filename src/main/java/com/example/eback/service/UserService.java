@@ -1,5 +1,6 @@
 package com.example.eback.service;
 
+import com.example.eback.constans.UserRegistryCode;
 import com.example.eback.dao.UserDAO;
 import com.example.eback.entity.User;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
@@ -30,17 +31,17 @@ public class UserService {
         return null != user;
     }
 
-    public int register(User user) {
+    public UserRegistryCode register(User user) {
 
         String name = HtmlUtils.htmlEscape(user.getName());
         String role = "user";
         String password = "00000000";
         if (name.equals("")) {
-            return 0;
+            return UserRegistryCode.EMPTY_MSG;
         }
-        if(userDAO.existsByName(name)) return 2;
-        boolean exist=true;
-        while(exist) {
+        if (userDAO.existsByName(name)) return UserRegistryCode.USER_EXISTS;
+        boolean exist = true;
+        while (exist) {
             int hashCode = new SecureRandomNumberGenerator().nextBytes().toString().hashCode();
             if (hashCode < 0) {
                 hashCode = -hashCode;
@@ -50,7 +51,7 @@ public class UserService {
             // d 代表参数为正数型
             String format = String.format("%010d", hashCode).substring(0, 6);
 
-            String username=user.getUsername();
+            String username = user.getUsername();
             user.setUsername(username);
             user.setName(name);
             user.setRole(role);
@@ -66,7 +67,7 @@ public class UserService {
 
         userDAO.save(user);
 
-        return 1;
+        return UserRegistryCode.REGISTRY_SUCCESS;
     }
 
     public User setPassword(User user) {
@@ -80,7 +81,7 @@ public class UserService {
     }
 
     public void edit(User user) {
-        User userDB=userDAO.findByUsername(user.getUsername());
+        User userDB = userDAO.findByUsername(user.getUsername());
         userDB.setRole(user.getRole());
         user.setName(user.getName());
 
@@ -97,25 +98,25 @@ public class UserService {
         userInDB.setPassword(encodedPassword);
         return userDAO.save(userInDB);
     }
+
     public void deleteById(int id) {
         userDAO.deleteById(id);
     }
 
 
-    public List<User> list(){
-        List<User> users=userDAO.findAll();
-        Iterator<User> it=users.iterator();
+    public List<User> list() {
+        List<User> users = userDAO.findAll();
+        Iterator<User> it = users.iterator();
         User user;
-        while(it.hasNext()){
-            user=it.next();
+        while (it.hasNext()) {
+            user = it.next();
             user.setPassword("");
             user.setSalt("");
         }
-        return  users;
+        return users;
     }
 
-    public User get(int id)
-    {
+    public User get(int id) {
         User u = userDAO.findById(id).orElse(null);
         return u;
     }

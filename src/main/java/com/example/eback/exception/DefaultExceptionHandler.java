@@ -23,37 +23,42 @@ import javax.security.auth.login.LoginException;
 @ControllerAdvice
 @ResponseBody
 public class DefaultExceptionHandler {
-    @ExceptionHandler(value =  IllegalArgumentException.class)
+    @ExceptionHandler(value = IllegalArgumentException.class)
     public Result exceptionHandler1(Exception e) {
         String message = "传入了错误的参数";
         return ResultFactory.buildFailResult(message);
     }
+
     @ExceptionHandler(value = UnauthorizedException.class)
     public Result exceptionHandler2(Exception e) {
-        String  message = "权限认证失败";
+        String message = "权限认证失败";
 
         return ResultFactory.buildFailResult(message);
     }
-    @ExceptionHandler(value =  HttpMediaTypeNotAcceptableException.class)
+
+    @ExceptionHandler(value = HttpMediaTypeNotAcceptableException.class)
     public void exceptionHandler3(Exception e) {
-      log.warn("HttpMediaTypeNotAcceptableException");
+        log.warn("HttpMediaTypeNotAcceptableException");
     }
 
-    @ExceptionHandler(value =  MissingServletRequestParameterException.class)
+    @ExceptionHandler(value = MissingServletRequestParameterException.class)
     public Result exceptionHandler4(Exception e) {
         String message = "error";
         return ResultFactory.buildFailResult(message);
     }
-    @ExceptionHandler(value =  LoginException.class)
+
+    @ExceptionHandler(value = LoginException.class)
     public Result exceptionHandler5(Exception e) {
         String message = "没有登录";
         return ResultFactory.buildFailResult(message);
     }
+
     @ExceptionHandler(value = NullPointerException.class)
     public Result exceptionHandler(Exception e) {
-        String message = "找不到数据"+e.getMessage();
+        String message = "找不到数据" + e.getMessage();
         return ResultFactory.buildFailResult(message);
     }
+
     @ExceptionHandler(value = HttpMessageNotReadableException.class)
     public Result exceptionHandler6(Exception e) {
         String message = "参数不全";

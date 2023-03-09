@@ -1,4 +1,4 @@
-package com.example.eback.WebSocket;
+package com.example.eback.webSocket;
 
 
 
@@ -13,8 +13,6 @@ import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /**

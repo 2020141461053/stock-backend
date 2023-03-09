@@ -6,11 +6,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * @author pBW
- * @date 1/19
+ * @since 1/19
  */
 @SpringBootConfiguration
 public class MyWebConfigurer implements WebMvcConfigurer {
-
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {

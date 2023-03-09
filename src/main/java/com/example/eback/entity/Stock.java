@@ -17,7 +17,6 @@ import java.util.Date;
 @Table(name = "stock")
 @ToString
 @JsonIgnoreProperties({"handler","hibernateLazyInitializer"})
-
 public class Stock {
 
     @Id

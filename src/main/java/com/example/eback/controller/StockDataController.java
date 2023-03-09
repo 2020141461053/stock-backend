@@ -1,7 +1,6 @@
 package com.example.eback.controller;
 
-import com.example.eback.Listener.StockDataPublisher;
-import com.example.eback.dao.StockDataDAO;
+import com.example.eback.listener.StockDataPublisher;
 import com.example.eback.entity.Stock;
 import com.example.eback.entity.StockData;
 import com.example.eback.redis.RedisService;
@@ -10,17 +9,16 @@ import com.example.eback.result.ResultFactory;
 import com.example.eback.service.StockDataService;
 import com.example.eback.service.StockService;
 import com.opencsv.CSVReader;
-import com.opencsv.bean.*;
+import com.opencsv.CSVWriter;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsv.bean.StatefulBeanToCsv;
+import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import com.example.eback.WebSocket.WebSocket;
-import com.opencsv.CSVWriter;
-import org.springframework.http.HttpHeaders;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -28,14 +26,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 @ApiOperation(value = "股票数据相关接口")
 @RestController
 public class StockDataController {
+
     @Autowired
     StockDataService stockDataService;
     @Autowired
@@ -47,17 +44,17 @@ public class StockDataController {
     @Autowired
     private StockDataPublisher stockDataPublisher;
 
-    @ApiOperation(value = "获取某只股票的全部相关数据,查询mysql里的数据以及添加redis里的，需要排序",notes = "只需要填写int sid")
+    @ApiOperation(value = "获取某只股票的全部相关数据,查询mysql里的数据以及添加redis里的，需要排序", notes = "只需要填写int sid")
     @GetMapping("/api/stock_data/get")
-    public Result getBysid(@RequestBody StockData stockData){
-        List<StockData> stockDatas=stockDataService.findById(stockData.getSid());
-        stockDatas.add((StockData)redisService.get(String.valueOf(stockData.getSid())));
+    public Result getBysid(@RequestBody StockData stockData) {
+        List<StockData> stockDatas = stockDataService.findById(stockData.getSid());
+        stockDatas.add((StockData) redisService.get(String.valueOf(stockData.getSid())));
         return ResultFactory.buildSuccessResult(stockDatas);
     }
 
-    @ApiOperation(value = "导出某只股票的全部相关数据",notes = "需要该股票的int sid")
+    @ApiOperation(value = "导出某只股票的全部相关数据", notes = "需要该股票的int sid")
     @GetMapping("/api/stock_data/export")
-    public void exportCSV(HttpServletResponse response, @RequestBody StockData stockData)throws Exception{
+    public void exportCSV(HttpServletResponse response, @RequestBody StockData stockData) throws Exception {
         String filename = stockData.getSid() + ".csv";
         response.setContentType("text/csv");
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION,
@@ -71,21 +68,21 @@ public class StockDataController {
                 .build();
 
         //获取数据
-        List<StockData> stockDatas=stockDataService.findById(stockData.getSid());
-        stockDatas.add((StockData)redisService.get(String.valueOf(stockData.getSid())));
+        List<StockData> stockDatas = stockDataService.findById(stockData.getSid());
+        stockDatas.add((StockData) redisService.get(String.valueOf(stockData.getSid())));
 
         writer.write(stockDatas);
 
     }
 
 
-    @ApiOperation(value = "上传股票历史详情信息",notes = "")
+    @ApiOperation(value = "上传股票历史详情信息", notes = "")
     @PostMapping("/api/stock_data/upload")
     public Result uploadCsv(@RequestParam("file") MultipartFile file, Model model) throws IOException {
         if (file.isEmpty()) {
             model.addAttribute("message", "Please select a CSV file to upload.");
             model.addAttribute("status", false);
-        }else {
+        } else {
             // parse CSV file to create a list of `User` objects
             try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
 
@@ -113,17 +110,16 @@ public class StockDataController {
     }
 
 
-
-    @ApiOperation(value = "更新某只股票的信息",notes = "全部填写")
+    @ApiOperation(value = "更新某只股票的信息", notes = "全部填写")
     @PostMapping("/api/stock_data/add")
-    public Result add(@RequestBody StockData stockData){
-        String sid=stockData.getSid();
-        if (!stockService.exsistById(sid)){
+    public Result add(@RequestBody StockData stockData) {
+        String sid = stockData.getSid();
+        if (!stockService.exsistById(sid)) {
             return ResultFactory.buildFailResult("无此股票，请先登记");
         }
-        Object in_redis=redisService.get(String.valueOf(sid));
+        Object in_redis = redisService.get(String.valueOf(sid));
         StockData last_data;
-        if (in_redis !=null) {
+        if (in_redis != null) {
             last_data = (StockData) in_redis;
             /**
              * 对最高、最低点进行更新
@@ -139,12 +135,11 @@ public class StockDataController {
                 Stock stock = stockService.findById(sid);
                 stock.setMin_low(stockData.getValue());
             } else stockData.setMin_low(last_data.getMin_low());
-        }
-        else {
+        } else {
             /**
              * 更新数据库里的数据
              */
-            redisService.set(String.valueOf(sid),stockData);
+            redisService.set(String.valueOf(sid), stockData);
             stockDataService.saveData(stockData);
             stockDataPublisher.publishStockDataEvent(stockData);
             return ResultFactory.buildSuccessResult("成功");
@@ -154,20 +149,21 @@ public class StockDataController {
          * 更新数据库里的数据
          */
         stockDataService.saveData(stockData);
-        redisService.set(String.valueOf(sid),stockData);
+        redisService.set(String.valueOf(sid), stockData);
         /**
          同步信息，使用异步的事件驱动
          */
-        stockDataPublisher.publishStockDataEvent( stockData);
+        stockDataPublisher.publishStockDataEvent(stockData);
 
         return ResultFactory.buildSuccessResult("成功");
     }
-    @ApiOperation(value = "保存Tn的数据",notes = "全部填写")
-    @PostMapping("/api/stock_data_Tn/update")
-    public  Result StoreTnData(@RequestParam("stock_code")String s_code,
-                               @RequestParam("endDay") Date endDay,
-                               @RequestParam("day_num")int day_num){
 
+    @ApiOperation(value = "保存Tn的数据", notes = "全部填写")
+    @PostMapping("/api/stock_data_Tn/update")
+    public Result StoreTnData(@RequestParam("stock_code") String s_code,
+                              @RequestParam("endDay") Date endDay,
+                              @RequestParam("day_num") int day_num) {
+        // todo
 
         return ResultFactory.buildSuccessResult("已离线数据");
     }

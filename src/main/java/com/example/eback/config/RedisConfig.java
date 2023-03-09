@@ -26,7 +26,6 @@ import java.time.Duration;
 @EnableCaching
 @Configuration
 public class RedisConfig extends CachingConfigurerSupport {
-    public static final String REDIS_KEY_DATABASE="stock";
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
