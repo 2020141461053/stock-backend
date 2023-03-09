@@ -30,6 +30,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @ApiOperation(value = "股票数据相关接口")
@@ -161,6 +162,14 @@ public class StockDataController {
 
         return ResultFactory.buildSuccessResult("成功");
     }
+    @ApiOperation(value = "保存Tn的数据",notes = "全部填写")
+    @PostMapping("/api/stock_data_Tn/update")
+    public  Result StoreTnData(@RequestParam("stock_code")String s_code,
+                               @RequestParam("endDay") Date endDay,
+                               @RequestParam("day_num")int day_num){
 
+
+        return ResultFactory.buildSuccessResult("已离线数据");
+    }
 
 }
