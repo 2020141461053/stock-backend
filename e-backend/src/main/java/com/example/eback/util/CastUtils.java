@@ -13,7 +13,7 @@ public class CastUtils {
         throw new IllegalStateException("Utility class");
     }
     public static <T> List<T> objectConvertToList(Object obj, Class<T> clazz) {
-        List<T> result = new ArrayList<T>();
+        List<T> result = new ArrayList<>();
         if(obj instanceof List<?>)
         {
             for (Object o : (List<?>) obj)

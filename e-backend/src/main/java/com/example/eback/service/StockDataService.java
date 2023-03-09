@@ -83,4 +83,8 @@ public class StockDataService {
 
 
 
+    public void saveDataList(List<StockData> stockDataList){
+        stockDataDAO.saveAll(stockDataList);
+    }
+
 }

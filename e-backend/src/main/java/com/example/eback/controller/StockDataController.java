@@ -23,6 +23,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -49,7 +53,7 @@ public class StockDataController {
         return ResultFactory.buildSuccessResult(stockDatas);
     }
 
-    @ApiOperation(value = "导出某只股票的全部相关数据",notes = "需要该股票的String sid")
+    @ApiOperation(value = "导出某只股票的全部相关数据",notes = "需要该股票的int sid")
     @GetMapping("/api/stock_data/export")
     public void exportCSV(HttpServletResponse response, @RequestBody StockData stockData)throws Exception{
         String filename = stockData.getSid() + ".csv";
@@ -71,6 +75,41 @@ public class StockDataController {
         writer.write(stockDatas);
 
     }
+
+
+    @ApiOperation(value = "上传股票历史详情信息",notes = "")
+    @PostMapping("/api/stock_data/upload")
+    public Result uploadCsv(@RequestParam("file") MultipartFile file, Model model) throws IOException {
+        if (file.isEmpty()) {
+            model.addAttribute("message", "Please select a CSV file to upload.");
+            model.addAttribute("status", false);
+        }else {
+            // parse CSV file to create a list of `User` objects
+            try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+
+                CSVReader csvReader = new CSVReader(reader);
+                // create csv bean reader
+                CsvToBean<StockData> csvToBean = new CsvToBeanBuilder<StockData>(csvReader)
+                        .withType(StockData.class)
+                        .withSeparator(',')
+                        .withQuoteChar('"')
+                        .withIgnoreLeadingWhiteSpace(true)
+                        .build();
+
+                // convert `CsvToBean` object to list of stocks
+                List<StockData> stockDataList = csvToBean.parse();
+                System.out.print(stockDataList);
+                stockDataService.saveDataList(stockDataList);
+                // TODO: save stocks in DB?
+
+            } catch (Exception ex) {
+                model.addAttribute("message", "An error occurred while processing the CSV file.");
+                model.addAttribute("status", false);
+            }
+        }
+        return ResultFactory.buildFailResult("上传成功");
+    }
+
 
 
     @ApiOperation(value = "更新某只股票的信息",notes = "全部填写")
