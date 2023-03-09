@@ -1,17 +1,22 @@
 package com.example.eback.service;
 
-import com.example.eback.constans.UserRegistryCode;
+import com.example.eback.EBackApplication;
 import com.example.eback.entity.User;
+import org.apache.shiro.crypto.SecureRandomNumberGenerator;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import lombok.Builder;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -23,7 +28,6 @@ public class UserServiceTest {
     UserService userService;
 
     private final static User user = new User();
-
     @Before
     public void initUser() {
         user.setId(1);
@@ -38,13 +42,13 @@ public class UserServiceTest {
     @Test
     public void getRole() {
         String r = userService.getRole("admin");
-        assertEquals(r, "admin");
+        assertEquals(r,"admin");
     }
 
     @Test
     public void findByUsername() {
         User u = userService.findByUsername(user.getUsername());
-        assertEquals(u, user);
+        assertEquals(u,user);
     }
 
     @Test
@@ -59,10 +63,10 @@ public class UserServiceTest {
         User user1 = new User();
         user1.setName("testR");
         user1.setUsername("testR");
-        UserRegistryCode i = userService.register(user);
-        UserRegistryCode t = userService.register(user1);
-        assertEquals(UserRegistryCode.USER_EXISTS, i);
-        assertEquals(UserRegistryCode.REGISTRY_SUCCESS, t);
+        int i = userService.register(user);
+        int t = userService.register(user1);
+        assertEquals(2, i);
+        assertEquals(1,t);
 
     }
 
@@ -75,7 +79,7 @@ public class UserServiceTest {
         testU.setRole("test");
         testU.setName("test");
         userService.edit(testU);
-        assertEquals(user, testU);
+        assertEquals(user,testU);
 
     }
 
