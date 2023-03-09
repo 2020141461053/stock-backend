@@ -8,4 +8,5 @@ import java.util.Date;
 
 public interface TnDataDAO extends JpaRepository<TnData,Integer> {
     TnData findByStockCodeAndStartAndEnd(String stock_code, Date start, Date end);
+    boolean existsByStockCodeAndStartAndEnd(String stock_code, Date start, Date end);
 }

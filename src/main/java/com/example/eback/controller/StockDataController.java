@@ -1,5 +1,6 @@
 package com.example.eback.controller;
 
+import com.example.eback.constans.TnDataCode;
 import com.example.eback.listener.StockDataPublisher;
 import com.example.eback.entity.Stock;
 import com.example.eback.entity.StockData;
@@ -15,6 +16,7 @@ import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import io.swagger.annotations.ApiOperation;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.ui.Model;
@@ -163,9 +165,19 @@ public class StockDataController {
     public Result StoreTnData(@RequestParam("stock_code") String s_code,
                               @RequestParam("endDay") Date endDay,
                               @RequestParam("day_num") int day_num) {
-        // todo
 
-        return ResultFactory.buildSuccessResult("已离线数据");
+        return ResultFactory.buildSuccessResult(stockDataService.StoreTnData(s_code,endDay,day_num));
+    }
+
+    public Result GetTnData(@RequestParam("stock_code") String s_code,
+                              @RequestParam("endDay") Date endDay,
+                              @RequestParam("startDay") Date  startDay){
+        TnDataCode tnDataCode = stockDataService.existsByStockCodeAndStartAndEnd(s_code, endDay, startDay);
+        if (tnDataCode.getCode()< 0){
+            return  ResultFactory.buildFailResult(tnDataCode.getMsg());
+        }
+        return ResultFactory.buildSuccessResult(stockDataService.getTnData(s_code, endDay, startDay));
+
     }
 
 }
