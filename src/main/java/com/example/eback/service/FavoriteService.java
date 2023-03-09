@@ -6,6 +6,7 @@ import com.example.eback.dao.UserDAO;
 import com.example.eback.entity.Stock;
 import com.example.eback.entity.User_Stock;
 import com.example.eback.util.MyPage;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,8 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Service
+@Slf4j
 public class FavoriteService {
-    private static final Logger logger = LoggerFactory.getLogger(UserService. class);
     @Autowired
     UserDAO userDAO;
 
@@ -39,17 +40,17 @@ public class FavoriteService {
     public MyPage<Stock> findAll(int uid, int page, int size){
         MyPage<Stock> stocks=new MyPage<>();
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        Page<User_Stock> user_stocks=favoriteDAO.findAllByUid(uid, PageRequest.of(page, size, sort));
+        Page<User_Stock> userStocks=favoriteDAO.findAllByUid(uid, PageRequest.of(page, size, sort));
         List<Stock> stockList =new ArrayList<>();
-        for (User_Stock u_s : user_stocks.getContent()){
-            logger.info(u_s.getSid());
+        for (User_Stock u_s : userStocks.getContent()){
+            log.info(u_s.getSid());
             stockList.add(stockDAO.findById(u_s.getSid()));
         }
         stocks.setContent(stockList);
-        stocks.setTotalElements(user_stocks.getTotalElements());
-        stocks.setPageNumber(user_stocks.getPageable().getPageNumber());
-        stocks.setPageSize(user_stocks.getPageable().getPageSize());
-        stocks.setNumberOfElements(user_stocks.getNumberOfElements() );
+        stocks.setTotalElements(userStocks.getTotalElements());
+        stocks.setPageNumber(userStocks.getPageable().getPageNumber());
+        stocks.setPageSize(userStocks.getPageable().getPageSize());
+        stocks.setNumberOfElements(userStocks.getNumberOfElements() );
 
         return  stocks;
     }
@@ -60,17 +61,17 @@ public class FavoriteService {
      * @return
      */
     public int addFavorite(int uid,String sid){
-        User_Stock user_stock=new User_Stock();
+        User_Stock userStock=new User_Stock();
         if (!stockDAO.existsById(sid)){
             return  2;
         }
         if (favoriteDAO.existsUser_StockBySidAndUid(sid,uid)){
             return 0;
         }
-        user_stock.setSid(sid);
-        user_stock.setUid(uid);
-        logger.info("user_stock",user_stock);
-        favoriteDAO.save(user_stock);
+        userStock.setSid(sid);
+        userStock.setUid(uid);
+        log.info("user stock: {}",userStock);
+        favoriteDAO.save(userStock);
         return  1;
     }
 

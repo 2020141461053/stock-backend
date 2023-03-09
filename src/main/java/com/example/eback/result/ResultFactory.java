@@ -6,6 +6,8 @@ package com.example.eback.result;
  */
 public class ResultFactory {
 
+    private ResultFactory() {}
+
     public static Result buildSuccessResult(Object data) {
         return buildResult(ResultCode.SUCCESS, "成功", data);
     }

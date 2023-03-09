@@ -1,8 +1,8 @@
 package com.example.eback.util;
 
+import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -11,8 +11,8 @@ import java.util.List;
  * @Author Evan
  * @Date 2020/6/10
  */
-public class MyPage<T> implements Iterable<T>, Serializable {
-    private static final long serialVersionUID = -3720998571176536865L;
+@NoArgsConstructor
+public class MyPage<T> implements Iterable<T> {
     private List<T> content = new ArrayList<>(); //元素们
     private long totalElements;
     private int pageNumber;//页数
@@ -23,9 +23,6 @@ public class MyPage<T> implements Iterable<T>, Serializable {
     private int totalPages;
     private int numberOfElements;//一共元素数
 
-    public MyPage() {
-    }
-
     //只用把原来的page类放进来即可
     public MyPage(Page<T> page) {
         this.content = page.getContent();
@@ -35,7 +32,7 @@ public class MyPage<T> implements Iterable<T>, Serializable {
         this.numberOfElements = page.getNumberOfElements();
     }
 
-    public MyPage(List<T> list,long totalElements ,int pageNumber,int pageSize,int numberOfElements) {
+    public MyPage(List<T> list, long totalElements, int pageNumber, int pageSize, int numberOfElements) {
         this.content = list;
         this.totalElements = totalElements;
         this.pageNumber = pageNumber;

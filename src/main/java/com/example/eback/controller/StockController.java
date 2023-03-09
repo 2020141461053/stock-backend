@@ -109,7 +109,6 @@ public class StockController {
 
                 // convert `CsvToBean` object to list of stocks
                 List<Stock> stocks = csvToBean.parse();
-                System.out.print(stocks);
 
                 // TODO: save stocks in DB?
 

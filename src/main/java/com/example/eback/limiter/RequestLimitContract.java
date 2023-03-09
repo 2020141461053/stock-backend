@@ -1,6 +1,6 @@
-package com.example.eback.LimitContract;
+package com.example.eback.limiter;
 
-import com.example.eback.Exception.RequestLimitException;
+import com.example.eback.exception.RequestLimitException;
 import com.google.common.util.concurrent.RateLimiter;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;

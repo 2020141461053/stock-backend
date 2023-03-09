@@ -6,6 +6,7 @@ import com.example.eback.result.ResultFactory;
 import com.example.eback.service.UserService;
 import com.example.eback.util.LogUtil;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -28,11 +29,11 @@ import javax.validation.Valid;
  */
 @ApiOperation(value = "登录注册相关接口")
 @RestController
+@Slf4j
 public class LoginController {
 
     @Autowired
     UserService userService;
-    String ClassName="login";
 
     @ApiOperation(value = "登录",notes = "账号+密码")
     @PostMapping("/api/login")
@@ -47,10 +48,10 @@ public class LoginController {
         usernamePasswordToken.setRememberMe(true);
         try {
             subject.login(usernamePasswordToken);
-            LogUtil.log(ClassName,"info",username+"登录成功");
+            log.info("{}登录成功", username);
             return ResultFactory.buildSuccessResult(username);
         } catch (IncorrectCredentialsException e) {
-            LogUtil.log(ClassName,"warn",username+"登录，密码错误");
+            log.warn("{}登录，密码错误", username);
             return ResultFactory.buildFailResult("密码错误");
         } catch (UnknownAccountException e) {
             return ResultFactory.buildFailResult("账号不存在");
@@ -60,7 +61,7 @@ public class LoginController {
 
     @PostMapping("/api/register")
     public Result register(@RequestBody User user) {
-        LogUtil.log(ClassName,"info",user.getUsername()+"注册");
+        log.info("{}注册", user.getUsername());
         int status = userService.register(user);
         switch (status) {
             case 0:

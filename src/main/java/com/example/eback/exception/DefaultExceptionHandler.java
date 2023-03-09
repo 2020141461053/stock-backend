@@ -1,4 +1,4 @@
-package com.example.eback.Exception;
+package com.example.eback.exception;
 
 import com.example.eback.result.Result;
 import com.example.eback.result.ResultFactory;
@@ -6,7 +6,6 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

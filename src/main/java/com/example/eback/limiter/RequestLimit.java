@@ -1,4 +1,4 @@
-package com.example.eback.LimitContract;
+package com.example.eback.limiter;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 
