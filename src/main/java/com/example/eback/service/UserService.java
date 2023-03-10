@@ -35,7 +35,7 @@ public class UserService {
 
         String name = HtmlUtils.htmlEscape(user.getName());
         String role = "user";
-        String password = "00000000";
+        String password = user.getPassword();
         if (name.equals("")) {
             return UserRegistryCode.EMPTY_MSG;
         }
