@@ -39,4 +39,7 @@ public class StockService {
     public void saveStocks(List<Stock> stocks) {
         stockDAO.saveAll(stocks);
     }
+    public void saveStock(Stock stocks) {
+        stockDAO.save(stocks);
+    }
 }

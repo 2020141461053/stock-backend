@@ -19,6 +19,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -74,6 +75,17 @@ public class StockController {
         return ResultFactory.buildSuccessResult(stockMypage);
     }
 
+    @ApiOperation(value = "上传新的股票", notes = "需要股票名称")
+    @PostMapping("/api/stock/add")
+    public Result add(@RequestBody Stock stock) {
+        String sid = stock.getId();
+        if (stockService.exsistById(sid)) {
+            return ResultFactory.buildFailResult("已有此股票");
+        }
+        stockService.saveStock(stock);
+        return ResultFactory.buildSuccessResult("上传成功");
+    }
+
     @ApiOperation(value = "根据股票代码查询", notes = "需要股票代码")
     @PostMapping("/api/stock/get_code")
     public List<Stock> getByCode(@RequestParam("stockCode") String scode) {
@@ -83,9 +95,9 @@ public class StockController {
 
     @ApiOperation(value = "根据股票名称查询", notes = "需要股票名称")
     @PostMapping("/api/stock/get_name")
-    public List<Stock> getByName(@RequestParam("stockName") String sname) {
+    public Result getByName(@RequestParam("stockName") String sname) {
         List<Stock> stocks = stockService.findByNameLike("%" + sname + "%");
-        return stocks;
+        return ResultFactory.buildSuccessResult(stocks);
     }
 
     @RequiresPermissions("admin")

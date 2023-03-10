@@ -47,7 +47,7 @@ public class StockDataController {
     @Autowired
     private StockDataPublisher stockDataPublisher;
 
-    @ApiOperation(value = "获取某只股票的全部相关数据,查询mysql里的数据以及添加redis里的，需要排序", notes = "只需要填写string sid")
+    @ApiOperation(value = "获取某只股票的全部相关数据,查询mysql里的数据以及添加redis里的", notes = "只需要填写string sid")
     @GetMapping("/api/stock_data/get")
     public Result getBysid(@RequestParam("sid")String sid) {
         List<StockData> stockDatas = stockDataService.findById(sid);
@@ -113,7 +113,7 @@ public class StockDataController {
     }
 
 
-    @RequiresPermissions("admin")
+   // @RequiresPermissions("admin")
     @ApiOperation(value = "更新某只股票的信息", notes = "全部填写")
     @PostMapping("/api/stock_data/add")
     public Result add(@RequestBody StockData stockData) {
