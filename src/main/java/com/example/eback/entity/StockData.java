@@ -58,6 +58,13 @@ public class StockData {
 //    @CsvBindByPosition(position = 6)
     private String volume;
 
+
+    @CsvBindByName
+    private float open;
+
+    @CsvBindByName
+    private  float close;
+
     @Transient
 //    @CsvBindByPosition(position = 6)
     private float max_high;
