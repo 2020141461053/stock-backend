@@ -1,13 +1,12 @@
 package com.example.eback.service;
 
 import com.example.eback.EBackApplication;
+import com.example.eback.constans.UserRegistryCode;
 import com.example.eback.entity.User;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -63,10 +62,10 @@ public class UserServiceTest {
         User user1 = new User();
         user1.setName("testR");
         user1.setUsername("testR");
-        int i = userService.register(user);
-        int t = userService.register(user1);
-        assertEquals(2, i);
-        assertEquals(1,t);
+        UserRegistryCode msg1 = userService.register(user);
+        UserRegistryCode msg2 = userService.register(user1);
+        assertEquals(2, msg1.getCode());
+        assertEquals(1,msg2.getCode());
 
     }
 
