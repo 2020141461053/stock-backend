@@ -57,8 +57,8 @@ public class StockDataController {
 
     @ApiOperation(value = "导出某只股票的全部相关数据", notes = "需要该股票的String sid")
     @GetMapping("/api/stock_data/export")
-    public void exportCSV(HttpServletResponse response, @RequestBody StockData stockData) throws Exception {
-        String filename = stockData.getSid() + ".csv";
+    public void exportCSV(HttpServletResponse response, @RequestParam String sid) throws Exception {
+        String filename = sid +".csv";
         response.setContentType("text/csv");
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + filename + "\"");
@@ -71,8 +71,8 @@ public class StockDataController {
                 .build();
 
         //获取数据
-        List<StockData> stockDatas = stockDataService.findById(stockData.getSid());
-        stockDatas.add((StockData) redisService.get(String.valueOf(stockData.getSid())));
+        List<StockData> stockDatas = stockDataService.findById(sid);
+        stockDatas.add((StockData) redisService.get(String.valueOf(sid)));
 
         writer.write(stockDatas);
 
