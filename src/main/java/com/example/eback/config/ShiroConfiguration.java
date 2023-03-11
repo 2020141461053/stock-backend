@@ -35,16 +35,16 @@ public class ShiroConfiguration {
     public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
-        shiroFilterFactoryBean.setLoginUrl("/nowhere");
+        shiroFilterFactoryBean.setLoginUrl("/api/login");
 
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
         Map<String, Filter> customizedFilter = new HashMap<>();  // 自定义过滤器设置 1
 
-       // customizedFilter.put("url", getURLPathMatchingFilter()); // 自定义过滤器设置 2，命名，需在设置过滤路径前
-        //  filterChainDefinitionMap.put("/api/login", "authc");
 
-        //filterChainDefinitionMap.put("/api/admin/**", "url");  // 管理员可用接口
-       //shiroFilterFactoryBean.setFilters(customizedFilter); // 自定义过滤器设置 4，启用
+        customizedFilter.put("url", getURLPathMatchingFilter()); // 自定义过滤器设置 2，命名，需在设置过滤路径前
+        filterChainDefinitionMap.put("/api/login", "authc");
+        filterChainDefinitionMap.put("/api/admin/**", "url");  // 管理员可用接口
+        shiroFilterFactoryBean.setFilters(customizedFilter); // 自定义过滤器设置 4，启用
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
     }

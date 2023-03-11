@@ -41,7 +41,7 @@ public class StockDataServiceTest {
         stockDataExpected.setSid(sid);
         stockDataExpected.setTurnover(100);
         stockDataExpected.setValue(6);
-        stockDataExpected.setVolume("123456");
+        stockDataExpected.setVolume(123456);
         stockDataService.saveDataList(stockDataList);
         stockDataList.add(stockDataExpected);
         stockDataService.saveDataList(stockDataList);

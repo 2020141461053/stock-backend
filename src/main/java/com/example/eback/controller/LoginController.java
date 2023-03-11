@@ -72,6 +72,7 @@ public class LoginController {
     public Result logout() {
         Subject subject = SecurityUtils.getSubject();
         subject.logout();
+        System.out.println(SecurityUtils.getSubject().getPrincipal().toString());
         return ResultFactory.buildSuccessResult("成功登出");
     }
     @RequiresPermissions("admin")

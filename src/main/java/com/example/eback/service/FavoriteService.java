@@ -5,6 +5,8 @@ import com.example.eback.dao.StockDAO;
 import com.example.eback.dao.UserDAO;
 import com.example.eback.entity.Stock;
 import com.example.eback.entity.User_Stock;
+import com.example.eback.result.Result;
+import com.example.eback.result.ResultFactory;
 import com.example.eback.util.MyPage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,19 +62,19 @@ public class FavoriteService {
      * @param sid
      * @return
      */
-    public int addFavorite(int uid,String sid){
+    public Result addFavorite(int uid, String sid){
         User_Stock userStock=new User_Stock();
         if (!stockDAO.existsById(sid)){
-            return  2;
+            return  ResultFactory.buildFailResult("添加失败，已有此股票");
         }
         if (favoriteDAO.existsUser_StockBySidAndUid(sid,uid)){
-            return 0;
+            return ResultFactory.buildFailResult("添加失败，无此股票");
         }
         userStock.setSid(sid);
         userStock.setUid(uid);
         log.info("user stock: {}",userStock);
         favoriteDAO.save(userStock);
-        return  1;
+        return  ResultFactory.buildSuccessResult("添加成功");
     }
 
     /**
@@ -81,14 +83,14 @@ public class FavoriteService {
      * @param sid
      * @return
      */
-    public int deleteFavorite(int uid,String sid){
+    public Result deleteFavorite(int uid,String sid){
         if (!favoriteDAO.existsUser_StockBySidAndUid(sid,uid)){
-            return 0;
-        }
+            return ResultFactory.buildFailResult("删除失败，未添加此股票");
+           }
         User_Stock u=favoriteDAO.findByUidAndSid(uid,sid);
 
         favoriteDAO.delete(u);
 
-        return  1;
+        return ResultFactory.buildSuccessResult("删除成功");
     }
 }

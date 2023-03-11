@@ -6,7 +6,6 @@ package com.example.eback.webSocket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -44,10 +43,10 @@ public class WebSocket {
      * 连接建立成功调用的方法
      */
     @OnOpen
-    public void onOpen(Session session) {
-        this.username= SecurityUtils.getSubject().getPrincipal().toString();
+    public void onOpen(Session session, @PathParam("username") String username) {
         this.session = session;
         webSocketSet.add(this);     //加入set中
+        this.username = username;
         addOnlineCount();           //在线数加1
         try {
             sendMessage("conn_success");

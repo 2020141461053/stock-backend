@@ -56,7 +56,7 @@ public class StockData {
 
     @CsvBindByName
 //    @CsvBindByPosition(position = 6)
-    private String volume;
+    private int volume;
 
 
     @CsvBindByName
