@@ -88,9 +88,9 @@ public class StockController {
 
     @ApiOperation(value = "根据股票代码查询", notes = "需要股票代码")
     @PostMapping("/api/stock/get_code")
-    public List<Stock> getByCode(@RequestParam("stockCode") String scode) {
+    public Result  getByCode(@RequestParam("stockCode") String scode) {
         List<Stock> stocks = stockService.findByIdLike("%" + scode + "%");
-        return stocks;
+        return  ResultFactory.buildSuccessResult(stocks);
     }
 
     @ApiOperation(value = "根据股票名称查询", notes = "需要股票名称")

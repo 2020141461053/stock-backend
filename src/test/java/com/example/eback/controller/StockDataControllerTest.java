@@ -47,7 +47,7 @@ public class StockDataControllerTest {
         this.sid = "BIDU.O";
         this.stockData.setSid("test");
         this.stockData.setValue(123);
-        this.stockData.setVolume("123456");
+        this.stockData.setVolume(123456);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date date = formatter.parse("2023-03-10");
         this.stockData.setTime(date);
